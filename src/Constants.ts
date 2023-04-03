@@ -1,5 +1,5 @@
 export module ErrorMessages {
-    export const NO_MARKDOWN = "The current editor doesn't show a MARKDOWN document.";
+    export const NO_MARKDOWN = "The current editor doesn't show a json document.";
 }
 
 export module ExtensionConstants {

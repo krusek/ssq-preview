@@ -1,12 +1,12 @@
 {
-	"name": "remark-preview",
-	"displayName": "Remark Preview",
-	"description": "Preview your markdown file in VSCode as HTML using Remark processor.",
-	"version": "1.0.2",
+	"name": "ssq-preview",
+	"displayName": "SSQ Preview",
+	"description": "Preview your SSQ json files.",
+	"version": "1.0.4",
 	"icon": "icon.png",
-	"publisher": "SubratThakur",
+	"publisher": "krusek",
 	"engines": {
-		"vscode": "^1.48.0"
+		"vscode": "^1.63.0"
 	},
 	"galleryBanner": {
 		"color": "#eee",
@@ -16,11 +16,11 @@
 		"Other"
 	],
 	"bugs": {
-		"url": "https://github.com/SubratThakur/remark-preview/issues"
+		"url": "https://github.com/krusek/ssq-preview/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/SubratThakur/remark-preview"
+		"url": "https://github.com/krusek/ssq-preview"
 	},
 	"license": "MIT",
 	"activationEvents": [
@@ -30,15 +30,15 @@
 	"contributes": {
 		"configuration": {
 			"type": "object",
-			"title": "Remark Preview",
+			"title": "SSQ Preview",
 			"order": 20,
 			"properties": {
-				"remark.preview.scrollPreviewWithEditor": {
+				"ssq.preview.scrollPreviewWithEditor": {
 					"type": "boolean",
 					"default": true,
 					"description": "Scroll preview window when you scroll Editor"
 				},
-				"remark.preview.showPreviewOptionInMenuBar": {
+				"ssq.preview.showPreviewOptionInMenuBar": {
 					"type": "boolean",
 					"default": false,
 					"description": "Show 'Preview to Side' option in Menu bar; if false then in Status bar"
@@ -47,7 +47,7 @@
 		},
 		"commands": [
 			{
-				"command": "remark.sidePreview",
+				"command": "ssq.sidePreview",
 				"title": "Show side preview",
 				"category": "menubar",
 				"icon": {
@@ -56,7 +56,7 @@
 				}
 			},
 			{
-				"command": "remark.fullPreview",
+				"command": "ssq.fullPreview",
 				"title": "Show full preview",
 				"category": "menubar",
 				"icon": {
@@ -68,22 +68,22 @@
 		"menus": {
 			"editor/title": [
 				{
-					"command": "remark.sidePreview",
-					"when": "editorLangId == markdown && config.remark.preview.showPreviewOptionInMenuBar",
-					"alt": "remark.fullPreview",
+					"command": "ssq.sidePreview",
+					"when": "editorLangId == markdown && config.ssq.preview.showPreviewOptionInMenuBar",
+					"alt": "ssq.fullPreview",
 					"group": "navigation"
 				}
 			]
 		},
 		"keybindings": [
 			{
-				"command": "remark.sidePreview",
+				"command": "ssq.sidePreview",
 				"key": "ctrl+q s",
 				"mac": "cmd+q s",
 				"when": "editorTextFocus"
 			},
 			{
-				"command": "remark.fullPreview",
+				"command": "ssq.fullPreview",
 				"key": "ctrl+q f",
 				"mac": "cmd+q f",
 				"when": "editorTextFocus"
@@ -100,25 +100,21 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"dependencies": {
-		"remark": "12.0.1",
-		"path": "^0.12.7",
 		"lodash.throttle": "4.1.1",
-		"remark-admonitions": "1.2.1",
-		"remark-html": "12.0.0",
-		"remark-frontmatter": "^2.0.0",
+		"path": "^0.12.7",
 		"to-vfile": "^6.1.0",
 		"webpack": "4.19.0",
 		"webpack-cli": "3.1.0"
 	},
 	"devDependencies": {
-		"@types/vscode": "1.48.0",
+		"@types/lodash.throttle": "4.1.4",
 		"@types/mocha": "^2.2.32",
 		"@types/node": "^6.0.40",
-		"@types/lodash.throttle": "4.1.4",
-		"ts-loader": "4.0.1",
+		"@types/vscode": "1.48.0",
 		"eslint": "^5.13.0",
-		"typescript": "3.9.7",
+		"ts-loader": "4.0.1",
 		"tslib": "^1.9.3",
+		"typescript": "3.9.7",
 		"vscode-test": "1.4.0"
 	},
 	"__metadata": {}

@@ -3,8 +3,7 @@ import * as vscode from 'vscode';
 import * as Constants from './Constants';
 import * as fs from 'fs';
 import * as path from 'path';
-import { markdownCompiler } from './remarkConfig';
-import * as frontmatter from 'remark-frontmatter';
+import { convertJson } from './ssqConfig';
 import { htmlTemplate } from './html-template';
 import { disposeAll } from './utils/dispose';
 
@@ -15,7 +14,7 @@ export default class Preview {
     line: number;
     disableWebViewStyling: boolean;
     context: vscode.ExtensionContext;
-    remarkViewerConfig: any;
+    ssqViewerConfig: any;
     private _resource: vscode.Uri;
     private readonly disposables: vscode.Disposable[] = [];
     private _disposed: boolean = false;
@@ -29,24 +28,23 @@ export default class Preview {
     };
 
     async handleTextDocumentChange() {
-        this.remarkViewerConfig = vscode.workspace.getConfiguration('remark');
-        if (vscode.window.activeTextEditor && this.checkDocumentIsMarkdown(true) && this.panel && this.panel !== undefined) {
+        if (this._disposed) return;
+        this.ssqViewerConfig = vscode.workspace.getConfiguration('ssq');
+        if (vscode.window.activeTextEditor && this.checkDocumentIsJson(true) && this.panel && this.panel !== undefined && this.panel.visible) {
             let currentHTMLtext = vscode.window.activeTextEditor.document.getText();
             const filePaths = vscode.window.activeTextEditor.document.fileName.split('/');
             const fileName = filePaths[filePaths.length - 1]
             this.panel.title = `[Preview] ${fileName}`;
-            const md = markdownCompiler().use(frontmatter, { type: 'yaml', marker: '-' });
-            let currentHTMLContent = await md.process(currentHTMLtext);
-            this._resource = vscode.window.activeTextEditor.document.uri;
-            this.panel.webview.html = this.getWebviewContent(currentHTMLContent.contents, fileName);
-            if (vscode.window.activeTextEditor.document.languageId === 'markdown' && this.remarkViewerConfig.get('preview.scrollPreviewWithEditor')) {
-                this.postMessage({
-                    type: 'scroll',
-                    line: vscode.window.activeTextEditor.visibleRanges,
-                    source: vscode.window.activeTextEditor.document
-                });
+            try {
+                let parsed = JSON.parse(currentHTMLtext);
+            } catch {
+                console.log(currentHTMLtext);
             }
-            //console.log(this.panel.webview.html);
+            let currentHTMLContent = await convertJson(JSON.parse(currentHTMLtext));
+            console.log(currentHTMLtext)
+            console.log(currentHTMLContent)
+            this._resource = vscode.window.activeTextEditor.document.uri;
+            this.panel.webview.html = this.getWebviewContent(currentHTMLContent, fileName);
         }
     }
 
@@ -78,8 +76,9 @@ export default class Preview {
         return languageId;
     }
 
-    checkDocumentIsMarkdown(showWarning: boolean): boolean {
-        let result = this.getDocumentType() === "markdown";
+    checkDocumentIsJson(showWarning: boolean): boolean {
+        return true;
+        let result = this.getDocumentType() === "json";
         if (!result && showWarning) {
             vscode.window.showInformationMessage(Constants.ErrorMessages.NO_MARKDOWN);
         }
@@ -87,7 +86,7 @@ export default class Preview {
     }
 
     async initMarkdownPreview(viewColumn: number) {
-        let proceed = this.checkDocumentIsMarkdown(true);
+        let proceed = this.checkDocumentIsJson(true);
         if (proceed) {
             const filePaths = vscode.window.activeTextEditor.document.fileName.split('/');
             const fileName = filePaths[filePaths.length - 1];
@@ -117,8 +116,8 @@ export default class Preview {
             vscode.window.onDidChangeActiveTextEditor(await this.handleTextDocumentChange.bind(this));
 
             vscode.window.onDidChangeTextEditorVisibleRanges(({ textEditor, visibleRanges }) => {
-                this.remarkViewerConfig = vscode.workspace.getConfiguration('remark');
-                if (textEditor.document.languageId === 'markdown' && this.remarkViewerConfig.get('preview.scrollPreviewWithEditor')) {
+                this.ssqViewerConfig = vscode.workspace.getConfiguration('ssq');
+                if (textEditor.document.languageId === 'markdown' && this.ssqViewerConfig.get('preview.scrollPreviewWithEditor')) {
                     this.postMessage({
                         type: 'scroll',
                         line: visibleRanges,

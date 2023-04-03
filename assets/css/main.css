@@ -1,5 +1,5 @@
 html {
-    font-family: "Salesforce Sans",Arial,sans-serif;
+    font-family: "Salesforce Sans", Arial, sans-serif;
     font-size: 100%;
     line-height: 1.5;
     background: #b0c4df;
@@ -8,7 +8,7 @@ html {
 }
 
 body {
-    font-family: "Salesforce Sans",Arial,sans-serif;
+    font-family: "Salesforce Sans", Arial, sans-serif;
     width: 100%;
     padding: 10px;
     min-width: 400px;
@@ -35,9 +35,9 @@ body {
 }
 
 /* Content */
-article *{
-    box-sizing:border-box;
-    font-family: "Salesforce Sans",Arial,sans-serif;
+article * {
+    box-sizing: border-box;
+    font-family: "Salesforce Sans", Arial, sans-serif;
     font-size: 100%;
     line-height: 1.5;
     color: #080707;
@@ -46,9 +46,9 @@ article *{
 
 article ul {
     font-weight: 100;
-    line-height:19.5px;
+    line-height: 19.5px;
     list-style-image: none;
-    list-style-position:outside;
+    list-style-position: outside;
     list-style-type: disc;
     padding-left: 40px;
     padding-inline-start: 40px;
@@ -58,7 +58,7 @@ article ul {
 
 article ul li {
     list-style-image: none;
-    list-style-position:outside;
+    list-style-position: outside;
     list-style-type: disc;
     padding: 0px;
     margin: 0px;
@@ -67,9 +67,9 @@ article ul li {
 
 article ol {
     font-weight: 100;
-    line-height:19.5px;
+    line-height: 19.5px;
     list-style-image: none;
-    list-style-position:outside;
+    list-style-position: outside;
     list-style-type: disc;
     margin-block-start: 1em;
     margin-block-end: 1em;
@@ -84,7 +84,7 @@ article ol {
 
 article ol li {
     list-style-image: none;
-    list-style-position:outside;
+    list-style-position: outside;
     list-style-type: decimal;
     text-align: left;
     padding: 0px;
@@ -93,42 +93,46 @@ article ol li {
 }
 
 article blockquote {
-    background:none;
-    border-color:none;
+    background: none;
+    border-color: none;
+}
+
+p.thought {
+    background-color: #77bdfa;
 }
 
 article p {
     font-weight: 100;
-    font-family:"Salesforce Sans",Arial,sans-serif;
+    font-family: "Salesforce Sans", Arial, sans-serif;
     display: block;
-    font-size:13px;
-    margin-block-end:13px;
-    margin-block-start:13px;
-    margin:13px 0px 13px 0px;
-    text-size-adjust:100%;
+    font-size: 13px;
+    margin-block-end: 13px;
+    margin-block-start: 13px;
+    margin: 13px 0px 13px 0px;
+    text-size-adjust: 100%;
 }
 
 article a {
-    color:rgb(0, 109, 204);
+    color: rgb(0, 109, 204);
     font-weight: 200;
-    font-family:"Salesforce Sans",Arial,sans-serif;
-    cursor:pointer;
+    font-family: "Salesforce Sans", Arial, sans-serif;
+    cursor: pointer;
     display: inline;
-    font-size:13px;
+    font-size: 13px;
     text-decoration: none solid rgb(0, 109, 204);
-    text-size-adjust:100%;
+    text-size-adjust: 100%;
     -webkit-transition: color .1s linear;
     transition: color .1s linear
 }
 
 article pre {
-    white-space:pre;
+    white-space: pre;
     margin: 13px 0px 13px 0px;
     overflow: auto;
-    font-family:monospace, monospace;
-    box-sizing:border-box;
-    color:rgb(8, 7, 7);
-    display:block;
+    font-family: monospace, monospace;
+    box-sizing: border-box;
+    color: rgb(8, 7, 7);
+    display: block;
 }
 
 article table {
@@ -136,26 +140,31 @@ article table {
     border-collapse: collapse;
     width: 100%;
     margin: 15px 5px;
-  }
-  
-  article table td, article table  th {
+}
+
+article table td,
+article table th {
     border: 1px solid #ddd;
     padding: 8px;
-  }
-  
-  article table  tr:nth-child(even){background-color: #f2f2f2;}
-  
-  article table  tr:hover {background-color: #ddd;}
-  
-  article table  th {
+}
+
+article table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+article table tr:hover {
+    background-color: #ddd;
+}
+
+article table th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
     background-color: #006dcc;
     color: white;
-  }
+}
 
-  article pre code {
+article pre code {
     background: #f4f4f4;
     border: 1px solid #ddd;
     border-left: 3px solid #006dcc;
@@ -170,7 +179,7 @@ article table {
     padding: 1em 1.5em;
     display: block;
     word-break: break-all;
-  }
+}
 
 /** Content Navigation **/
 main nav h3 {
@@ -179,7 +188,7 @@ main nav h3 {
     line-height: 1.25;
 }
 
-.slds-page-header__title{
+.slds-page-header__title {
     color: white;
     text-transform: capitalize;
 }
