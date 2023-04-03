@@ -97,17 +97,22 @@ article blockquote {
     border-color: none;
 }
 
-p.thought {
+.thought {
     background-color: #77bdfa;
 }
 
-article p {
+.error {
+    color: #ae1515;
+}
+
+ul.error li {
+    color: #ae1515;
+}
+
+article div {
     font-weight: 100;
     font-family: "Salesforce Sans", Arial, sans-serif;
-    display: block;
     font-size: 13px;
-    margin-block-end: 13px;
-    margin-block-start: 13px;
     margin: 13px 0px 13px 0px;
     text-size-adjust: 100%;
 }

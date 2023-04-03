@@ -69,7 +69,7 @@
 			"editor/title": [
 				{
 					"command": "ssq.sidePreview",
-					"when": "editorLangId == markdown && config.ssq.preview.showPreviewOptionInMenuBar",
+					"when": "config.ssq.preview.showPreviewOptionInMenuBar",
 					"alt": "ssq.fullPreview",
 					"group": "navigation"
 				}
@@ -78,14 +78,14 @@
 		"keybindings": [
 			{
 				"command": "ssq.sidePreview",
-				"key": "ctrl+q s",
-				"mac": "cmd+q s",
+				"key": "ctrl+j s",
+				"mac": "cmd+j s",
 				"when": "editorTextFocus"
 			},
 			{
 				"command": "ssq.fullPreview",
-				"key": "ctrl+q f",
-				"mac": "cmd+q f",
+				"key": "ctrl+j f",
+				"mac": "cmd+j f",
 				"when": "editorTextFocus"
 			}
 		]
