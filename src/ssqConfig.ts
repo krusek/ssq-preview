@@ -10,7 +10,8 @@ function process_children(items: Array<any>): string {
         p = process_references(p, references)
         p = do_lead(p, paragraph.lead)
         html += '<div class="' + paragraph.type + '">' + p + '</div>';
-        const errors = validate_references(references);
+        var errors: Array<string> = validate_references(references);
+        errors.push(...validate_paragraph(paragraph));
         if (errors.length > 0) {
             html += '<ul class="error">';
             for (var i = 0; i < errors.length; i++) {
