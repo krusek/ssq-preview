@@ -109,6 +109,13 @@ ul.error li {
     color: #ae1515;
 }
 
+.inside_story {
+    background-color: #fd4b4b;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 30px;
+}
+
 article div {
     font-weight: 100;
     font-family: "Salesforce Sans", Arial, sans-serif;

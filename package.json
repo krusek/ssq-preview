@@ -2,7 +2,7 @@
 	"name": "ssq-preview",
 	"displayName": "SSQ Preview",
 	"description": "Preview your SSQ json files.",
-	"version": "1.0.4",
+	"version": "1.0.6",
 	"icon": "icon.png",
 	"publisher": "krusek",
 	"engines": {
