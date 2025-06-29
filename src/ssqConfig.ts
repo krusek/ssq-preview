@@ -46,6 +46,9 @@ function do_lead(text: string, lead): string {
 function validate_paragraph(paragraph: any): Array<string> {
     var errors: Array<string> = []
     const lead = paragraph['lead'] ?? 0
+    if (typeof lead === "string") {
+        errors.push('"lead" is a string')
+    }
     const text: string = paragraph['text']
     const length = text.length
     if (lead > text.length) {
