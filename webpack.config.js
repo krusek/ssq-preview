@@ -5,7 +5,7 @@
 const path = require('path');
 
 module.exports = {
-	mode: "development",
+	mode: "production",
 	entry: {
 		index: './src/preview/index.ts'
 	},
@@ -21,9 +21,16 @@ module.exports = {
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js']
 	},
-	devtool: 'inline-source-map',
+	devtool: 'source-map',
 	output: {
 		filename: '[name].js',
-		path: path.resolve(__dirname, 'assets/js')
+		path: path.resolve(__dirname, 'assets/js'),
+		clean: true
+	},
+	optimization: {
+		minimize: true
+	},
+	performance: {
+		hints: false
 	}
 };

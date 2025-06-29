@@ -12,7 +12,7 @@ const messaging = createPosterForVsCode(vscode);
 
 //const configData = getData('data-settings');
 
-window.addEventListener('message', event => {
+window.addEventListener('message', (event: MessageEvent) => {
     const message = event.data;
     if (message.type === 'scroll') {
         console.log('Line : ' + message.line[0][0].line);
@@ -32,11 +32,11 @@ window.addEventListener('scroll', throttle(() => {
 */
 
 const onUpdateView = (() => {
-    const doScroll = throttle((line) => {
+    const doScroll = throttle((line: number) => {
         scrollToRevealSourceLine(line);
     }, 50);
 
-    return (line) => {
+    return (line: number) => {
         if (!isNaN(line)) {
             doScroll(line);
         }

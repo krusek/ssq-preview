@@ -17,7 +17,7 @@ export function scrollToRevealSourceLine(percentage: number) {
 	getEditorLineNumber(true);
 }
 
-export function getEditorLineNumber(change) {
+export function getEditorLineNumber(change: boolean) {
 	if (change) {
 		const posPercentage = getVerticalScrollPercentage(document.body);
 		const total = getData('data-settings').lineCount;
@@ -27,8 +27,8 @@ export function getEditorLineNumber(change) {
 	}
 }
 
-function getVerticalScrollPercentage(elm) {
-	var p = elm.parentNode,
-		pos = ((elm.scrollTop || p.scrollTop) / document.body.scrollHeight) * 100;
+function getVerticalScrollPercentage(elm: HTMLElement): number {
+	var p = elm.parentNode as HTMLElement,
+		pos = ((elm.scrollTop || (p && p.scrollTop) || 0) / document.body.scrollHeight) * 100;
 	return pos
 }

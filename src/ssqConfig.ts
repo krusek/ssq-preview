@@ -4,9 +4,9 @@ function process_children(items: Array<any>): string {
     var html: string = ""
     for (var index in items) {
         var paragraph = items[index]
-        var p = paragraph['text']
-        var references = paragraph['references'] || []
-        references.sort((a, b) => a.start > b.start ? -1 : 1)
+        var p: string = paragraph['text']
+        var references: Array<any> = paragraph['references'] || []
+        references.sort((a: any, b: any) => a.start > b.start ? -1 : 1)
         p = process_references(p, references)
         p = do_lead(p, paragraph.lead)
         html += '<div class="' + paragraph.type + '">' + p + '</div>';
@@ -34,18 +34,18 @@ export function convertJson(json: any): string {
     return html
 }
 
-function insert_tag(text: string, open: string, close: string, start, end): string {
+function insert_tag(text: string, open: string, close: string, start: number, end: number): string {
     return text.substring(0, start) + open + text.substring(start, end) + close + text.substring(end)
 }
 
-function do_lead(text: string, lead): string {
+function do_lead(text: string, lead: number): string {
     if (lead) return insert_tag(text, '<b>', '</b>', 0, lead)
     return text
 }
 
 function validate_paragraph(paragraph: any): Array<string> {
     var errors: Array<string> = []
-    const lead = paragraph['lead'] ?? 0
+    const lead: number = paragraph['lead'] ?? 0
     if (typeof lead === "string") {
         errors.push('"lead" is a string')
     }
@@ -56,6 +56,15 @@ function validate_paragraph(paragraph: any): Array<string> {
         errors.push(error)
     }
     return errors;
+}
+
+function process_references(text: string, references: Array<any>): string {
+    for (var index2 in references) {
+        var reference = references[index2]
+        var link = link_text(reference)
+        text = insert_tag(text, '<a href="#">', '</a>[' + link + ']', reference.start, reference.end)
+    }
+    return text
 }
 
 function validate_references(references: Array<any>): Array<string> {
@@ -88,16 +97,7 @@ function validate_references(references: Array<any>): Array<string> {
     return errors
 }
 
-function process_references(text, references): string {
-    for (var index2 in references) {
-        var reference = references[index2]
-        var link = link_text(reference)
-        text = insert_tag(text, '<a href="#">', '</a>[' + link + ']', reference.start, reference.end)
-    }
-    return text
-}
-
-function link_text(reference): string {
+function link_text(reference: any): string {
     var link = reference.book
     if (reference.c)
         link += " " + reference.c

@@ -8,14 +8,13 @@ import { htmlTemplate } from './html-template';
 import { disposeAll } from './utils/dispose';
 
 export default class Preview {
-
-    panel: vscode.WebviewPanel;
-    editor: any;
-    line: number;
-    disableWebViewStyling: boolean;
+    panel: vscode.WebviewPanel | undefined = undefined;
+    editor: vscode.TextEditor | undefined = undefined;
+    line: number = 0;
+    disableWebViewStyling: boolean = false;
     context: vscode.ExtensionContext;
-    ssqViewerConfig: any;
-    private _resource: vscode.Uri;
+    ssqViewerConfig: any = undefined;
+    private _resource: vscode.Uri | undefined = undefined;
     private readonly disposables: vscode.Disposable[] = [];
     private _disposed: boolean = false;
     private readonly _onDisposeEmitter = new vscode.EventEmitter<void>();
@@ -23,56 +22,56 @@ export default class Preview {
     private readonly _onDidChangeViewStateEmitter = new vscode.EventEmitter<vscode.WebviewPanelOnDidChangeViewStateEvent>();
 
     //returns true if an html document is open
-    constructor(context) {
+    constructor(context: vscode.ExtensionContext) {
         this.context = context;
-    };
+    }
 
-    async handleTextDocumentChange() {
+    async handleTextDocumentChange(): Promise<void> {
         if (this._disposed) return;
         this.ssqViewerConfig = vscode.workspace.getConfiguration('ssq');
-        if (vscode.window.activeTextEditor && this.checkDocumentIsJson(true) && this.panel && this.panel !== undefined && this.panel.visible) {
-            let currentHTMLtext = vscode.window.activeTextEditor.document.getText();
-            const filePaths = vscode.window.activeTextEditor.document.fileName.split('/');
-            const fileName = filePaths[filePaths.length - 1]
+        const editor = vscode.window.activeTextEditor;
+        if (editor && this.checkDocumentIsJson(true) && this.panel && this.panel.visible) {
+            let currentHTMLtext = editor.document.getText();
+            const filePaths = editor.document.fileName.split('/');
+            const fileName = filePaths[filePaths.length - 1];
             this.panel.title = `[Preview] ${fileName}`;
             try {
-                let parsed = JSON.parse(currentHTMLtext);
+                JSON.parse(currentHTMLtext);
             } catch {
                 console.log(currentHTMLtext);
             }
             let currentHTMLContent = await convertJson(JSON.parse(currentHTMLtext));
-            console.log(currentHTMLtext)
-            console.log(currentHTMLContent)
-            this._resource = vscode.window.activeTextEditor.document.uri;
+            this._resource = editor.document.uri;
             this.panel.webview.html = this.getWebviewContent(currentHTMLContent, fileName);
         }
     }
 
-    getWebviewContent(html, fileName) {
+    getWebviewContent(html: string, fileName: string): string {
         const filePaths = fileName.split('/');
         fileName = filePaths[filePaths.length - 1];
         const reg = /<img src\s*=\s*"(.+?)"/g;
-        var m;
+        let m: RegExpExecArray | null;
         do {
             m = reg.exec(html);
             if (m) {
                 let imagePath = m[1].split('/');
                 let imageName = imagePath[imagePath.length - 1];
                 let vsCodeImagePath = this.getDynamicContentPath(imageName);
-                html = html?.replace(m[0], m[0].replace(m[1], vsCodeImagePath));
+                html = html?.replace(m[0], m[0].replace(m[1], vsCodeImagePath.toString()));
             }
         } while (m);
-        return htmlTemplate(this.context, this.panel, html, fileName);
+        return htmlTemplate(this.context, this.panel!, html, fileName);
     }
 
-    getDynamicContentPath(filepath) {
-        const onDiskPath = vscode.Uri.file(path.join(vscode.workspace.rootPath, 'content/media', filepath))
-        const styleSrc = this.panel.webview.asWebviewUri(onDiskPath);
-        return styleSrc
+    getDynamicContentPath(filepath: string): vscode.Uri {
+        const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+        const onDiskPath = vscode.Uri.file(path.join(workspaceFolder || '', 'content/media', filepath));
+        return this.panel ? this.panel.webview.asWebviewUri(onDiskPath) : onDiskPath;
     }
 
     getDocumentType(): string {
-        let languageId = vscode.window.activeTextEditor.document.languageId.toLowerCase();
+        const editor = vscode.window.activeTextEditor;
+        let languageId = editor?.document.languageId.toLowerCase() || '';
         return languageId;
     }
 
@@ -87,33 +86,35 @@ export default class Preview {
 
     async initMarkdownPreview(viewColumn: number) {
         let proceed = this.checkDocumentIsJson(true);
-        if (proceed) {
-            const filePaths = vscode.window.activeTextEditor.document.fileName.split('/');
+        const editor = vscode.window.activeTextEditor;
+        if (proceed && editor) {
+            const filePaths = editor.document.fileName.split('/');
             const fileName = filePaths[filePaths.length - 1];
             // Create and show a new webview
+            const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
             this.panel = vscode.window.createWebviewPanel(
                 'liveHTMLPreviewer',
                 '[Preview] ' + fileName,
                 viewColumn,
                 {
-                    // Enable scripts in the webview
                     enableScripts: true,
                     retainContextWhenHidden: true,
-                    // And restrict the webview to only loading content from our extension's `assets` directory.
-                    localResourceRoots: [vscode.Uri.file(path.join(this.context.extensionPath, 'assets')), vscode.Uri.file(path.join(vscode.workspace.rootPath, 'content/media'))]
+                    localResourceRoots: [
+                        vscode.Uri.file(path.join(this.context.extensionPath, 'assets')),
+                        vscode.Uri.file(path.join(workspaceFolder || '', 'content/media'))
+                    ]
                 }
             );
-            this.panel.iconPath = this.iconPath
+            this.panel.iconPath = this.iconPath;
             this._disposed = false;
 
-            // And set its HTML content
-            this.editor = vscode.window.activeTextEditor;
+            this.editor = editor;
             await this.handleTextDocumentChange.call(this);
 
-            vscode.workspace.onDidChangeTextDocument(await this.handleTextDocumentChange.bind(this));
-            vscode.workspace.onDidChangeConfiguration(await this.handleTextDocumentChange.bind(this));
-            vscode.workspace.onDidSaveTextDocument(await this.handleTextDocumentChange.bind(this));
-            vscode.window.onDidChangeActiveTextEditor(await this.handleTextDocumentChange.bind(this));
+            vscode.workspace.onDidChangeTextDocument(this.handleTextDocumentChange.bind(this));
+            vscode.workspace.onDidChangeConfiguration(this.handleTextDocumentChange.bind(this));
+            vscode.workspace.onDidSaveTextDocument(this.handleTextDocumentChange.bind(this));
+            vscode.window.onDidChangeActiveTextEditor(this.handleTextDocumentChange.bind(this));
 
             vscode.window.onDidChangeTextEditorVisibleRanges(({ textEditor, visibleRanges }) => {
                 this.ssqViewerConfig = vscode.workspace.getConfiguration('ssq');
@@ -124,7 +125,7 @@ export default class Preview {
                         source: textEditor.document
                     });
                 }
-            })
+            });
 
             this.panel.webview.onDidReceiveMessage(e => {
                 this.onDidScrollPreview(e.body.line);
@@ -153,7 +154,7 @@ export default class Preview {
     }
 
     private isPreviewOf(resource: vscode.Uri): boolean {
-        return this._resource.fsPath === resource.fsPath;
+        return !!this._resource && this._resource.fsPath === resource.fsPath;
     }
 
     private get iconPath() {
@@ -165,7 +166,7 @@ export default class Preview {
     }
 
     private postMessage(msg: any) {
-        if (!this._disposed) {
+        if (!this._disposed && this.panel) {
             this.panel.webview.postMessage(msg);
         }
     }
@@ -179,7 +180,9 @@ export default class Preview {
         this._onDisposeEmitter.fire();
 
         this._onDisposeEmitter.dispose();
-        this.panel.dispose();
+        if (this.panel) {
+            this.panel.dispose();
+        }
 
         disposeAll(this.disposables);
     }

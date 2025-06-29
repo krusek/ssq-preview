@@ -1,8 +1,12 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-export const htmlTemplate = (context, panel, html, fileName) => {
-
+export const htmlTemplate = (
+    context: vscode.ExtensionContext,
+    panel: vscode.WebviewPanel,
+    html: string,
+    fileName: string
+): string => {
     const nonce = getNonce();
     return `<!doctype html>
             <html lang="en">
@@ -35,19 +39,24 @@ export const htmlTemplate = (context, panel, html, fileName) => {
 };
 
 function getInitialState() {
+    const editor = vscode.window.activeTextEditor;
     return {
-        source: vscode.window.activeTextEditor.document.uri.toString(),
-        visibleRange: vscode.window.activeTextEditor.visibleRanges,
-        lineCount: vscode.window.activeTextEditor.document.lineCount,
+        source: editor?.document.uri.toString() || '',
+        visibleRange: editor?.visibleRanges || [],
+        lineCount: editor?.document.lineCount || 0,
     };
 }
-function getDynamicContentPath(context, panel, filepath) {
-    const onDiskPath = vscode.Uri.file(path.join(context.extensionPath, filepath))
+function getDynamicContentPath(
+    context: vscode.ExtensionContext,
+    panel: vscode.WebviewPanel,
+    filepath: string
+): vscode.Uri {
+    const onDiskPath = vscode.Uri.file(path.join(context.extensionPath, filepath));
     const styleSrc = panel.webview.asWebviewUri(onDiskPath);
-    return styleSrc
+    return styleSrc;
 }
 
-function getNonce() {
+function getNonce(): string {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (let i = 0; i < 32; i++) {

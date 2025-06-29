@@ -8,7 +8,7 @@ export default class StatusBarItem {
     statusBarItem: vscode.StatusBarItem;
     previewUtil: Preview;
 
-    constructor(context, utilities?: Preview) {
+    constructor(context: vscode.ExtensionContext, utilities?: Preview) {
 
         this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
         this.statusBarItem.command = "ssq.sidePreview";
