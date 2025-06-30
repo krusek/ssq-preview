@@ -2,7 +2,7 @@
 	"name": "ssq-preview",
 	"displayName": "SSQ Preview",
 	"description": "Preview your SSQ json files.",
-	"version": "1.0.7",
+	"version": "1.0.8",
 	"icon": "icon.png",
 	"publisher": "krusek",
 	"engines": {
@@ -12,7 +12,9 @@
 		"color": "#eee",
 		"theme": "light"
 	},
-	"categories": ["Other"],
+	"categories": [
+		"Other"
+	],
 	"bugs": {
 		"url": "https://github.com/krusek/ssq-preview/issues"
 	},
@@ -21,7 +23,9 @@
 		"url": "https://github.com/krusek/ssq-preview"
 	},
 	"license": "MIT",
-	"activationEvents": ["onLanguage:markdown"],
+	"activationEvents": [
+		"onLanguage:markdown"
+	],
 	"main": "./out/src/extension.js",
 	"contributes": {
 		"configuration": {
@@ -97,7 +101,8 @@
 	},
 	"dependencies": {
 		"lodash.throttle": "^4.1.1",
-		"to-vfile": "^7.2.0"
+		"to-vfile": "^7.2.0",
+		"vsce": "^2.15.0"
 	},
 	"devDependencies": {
 		"@types/lodash.throttle": "^4.1.4",

@@ -47,12 +47,12 @@ function validate_paragraph(paragraph: any): Array<string> {
     var errors: Array<string> = []
     const lead: number = paragraph['lead'] ?? 0
     if (typeof lead === "string") {
-        errors.push('"lead" is a string')
+        errors.push('"lead" is a string. It should be a number.')
     }
     const text: string = paragraph['text']
     const length = text.length
     if (lead > text.length) {
-        const error = `"lead" value too large. Should be no more than ${length}`
+        const error = `"lead" value too large. Should be no more than ${length}.`
         errors.push(error)
     }
     return errors;
@@ -67,18 +67,33 @@ function process_references(text: string, references: Array<any>): string {
     return text
 }
 
+function check_type(dict: any, key: string, type: string, message_prefix: string, allow_null: boolean = false): Array<string> {
+    if (allow_null && dict[key] === undefined) {
+        return []
+    }
+    if (typeof dict[key] !== type) {
+        return [`${message_prefix} ${key} should be a ${type}. ${dict[key]}`]
+    }
+    return []
+}
+
 function validate_references(references: Array<any>): Array<string> {
     var errors: Array<string> = []
     for (var i = 0; i < references.length; i++) {
         const reference = references[i];
         if (!reference.book) {
-            const error = `Bible link number ${i} has error. Unknown bible book: ${reference.book}`;
+            const error = `Bible link number ${i} has an error. Unknown bible book: ${reference.book}`;
             errors.push(error);
         }
         if (!reference.c) {
-            const error = `Bible link number ${i} has error. Unknown chapter: ${reference.c}`;
+            const error = `Bible link number ${i} has an error. Unknown chapter: ${reference.c}`;
             errors.push(error);
         }
+        errors.push(...check_type(reference, 'c', 'string', `Bible link number ${i} has an error.`));
+        errors.push(...check_type(reference, 'v1', 'string', `Bible link number ${i} has an error.`));
+        errors.push(...check_type(reference, 'v2', 'string', `Bible link number ${i} has an error.`, true));
+        errors.push(...check_type(reference, 'start', 'number', `Bible link number ${i} has an error.`));
+        errors.push(...check_type(reference, 'end', 'number', `Bible link number ${i} has an error.`));
         const link = link_text(reference);
         var gateway = reference.link
         if (!gateway || (!gateway.includes(link) && !gateway.includes(link.replace(' ', '')))) {
